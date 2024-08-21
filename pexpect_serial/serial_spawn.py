@@ -67,3 +67,21 @@ class SerialSpawn(spawn):
 
         b = self._encoder.encode(s, final=False)
         return self.ser.write(b)
+
+    def write(self, s):
+        "Write to serial, return None"
+        self.send(s)
+
+    def writelines(self, sequence):
+        "Call self.write() for each item in sequence"
+        for s in sequence:
+            self.write(s)
+
+    def read_nonblocking(self, size=1, timeout=-1):
+        """
+        Read from the serial object and return the result encoded.
+        """
+        s = self.ser.read(size)
+        s = self._decoder.decode(s, final=False)
+        self._log(s, 'read')
+        return s
